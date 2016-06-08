@@ -22,6 +22,9 @@ else:
 			ext = filename[-1]
 			name = '.'.join(filename[0:-1])
 			out = open(name + "_clean" + "." + ext, 'w+')
+			out_meta = open(name + "_meta" + "." + ext, 'w+')
+			for j in range(0,skiplines):
+				out_meta.write(f[j])
 			for i in range(skiplines,len(f)):
 				count = count + 1
 				line = f[i]
