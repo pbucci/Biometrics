@@ -4,19 +4,19 @@ Package assumes Anaconda stack has been installed. Usually, this is a large but 
 
 Right now, you can just run:
 
-`run <hz> <seconds>`
+`run <hz> <milliseconds>`
 
-where hz is the downsample rate, and seconds is window size in seconds. 
+where hz is the downsample rate, and seconds is window size in milliseconds. 
 
 Hopefully, I've written this in a way such that these programs can fail halfway through and be elegantly restarted, as well as run concurrently. We'll see.
 
 Suggest if you're running on newcastle and not sure how long this will take, use:
 
-`nohup run <hz> <seconds>`
+`nohup run <hz> <milliseconds>`
 
 To avoid terminating if your connection gets broken. It's not super great for monitoring Console messages, but I'm sure there's a way around that.
 
-## No clean run
+## No clean run examples
 
 Cleaning files takes a very long time and only really needs to be done once. Here's a quick command for passing the files you've already cleaned to the rest of the programs:
 
