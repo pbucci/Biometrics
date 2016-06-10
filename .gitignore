@@ -1,3 +1,7 @@
 __pycache__/
 .DS_store
 data/
+clean_*/
+window_size*/
+reduce_by*/
+*.csv
