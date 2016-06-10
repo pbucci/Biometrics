@@ -87,7 +87,8 @@ def main():
 
 		for path in sys.argv[3:]:
 			print('Calculating features for ' + path + '...')
-
+			sys.stdout.flush()
+			
 			# load data
 			data = np.loadtxt(path,skiprows=1,delimiter=',', dtype='float')
 

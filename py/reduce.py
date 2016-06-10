@@ -22,6 +22,7 @@ else:
 	framerate = 2048
 	hz = int(sys.argv[1])
 	print('Reducing data to ' + str(hz) + ' hz')
+	sys.stdout.flush()
 	reduction_factor = math.floor(framerate / hz)
 	directory = "reduce_by_" + str(hz) # + "_" + str(timestamp)
 	if not os.path.exists(directory):

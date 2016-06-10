@@ -17,6 +17,7 @@ if len(sys.argv) < 2:
 	print("\tpython clean.py <file1...n>")
 else:
 	print('Cleaning started...')
+	sys.stdout.flush()
 	timestamp = int(time.time())
 	directory = "clean" # + "_" + str(timestamp)
 	

@@ -21,6 +21,7 @@ if len(sys.argv) < 2:
 		print('Assumes CSVs of the same shape + headers, vertical concatenation.\n', str(sys.argv))
 else:
 	print('Concatenating...')
+	sys.stdout.flush()
 	# timestamp for a unique filename
 	timestamp = int(time.time())
 	# make a new unique directory for CSVs to live in
