@@ -1,7 +1,16 @@
+#!//anaconda/bin/python
+
+################################################################################
+##<---------------------------- 80 chars across ----------------------------->##
+##        1         2         3         4         5         6         7       ##  
+##2345678901234567890123456789012345678901234567890123456789012345678901234567##
+################################################################################
+
 import sys 
 import os
 import time
 import math
+import re
 import numpy as np
 
 # ws    is window size in seconds
@@ -30,7 +39,9 @@ def getRows(ws,fps,cols,data):
 # Reads the first line of the CSV for column headers
 def getColumns(path):
 	with open(path) as cn:
-		return cn.readlines()[0].strip().split(',')
+		# str.replace(/foo/g, "bar")
+		ret = re.sub(r'[:%\s\&\(\)/]','_',cn.readlines()[0].strip())
+	return ret.split(',')
 
 # gets the metadata from a file esp. participant num, condition, emotion
 def getMeta(path):
@@ -55,23 +66,27 @@ def featureVector(data,columnname):
 
 def main():
 	# Deal with arguments
-	if len(sys.argv) < 3:
+	if len(sys.argv) < 4:
 		print('Usage:', str(sys.argv))
-		print('\t','python features.py <window_size_in_seconds> <file1...n>')
+		print('\t','python features.py <window_size_in_seconds> <frames_per_second> <file1...n>')
 	else:
+
 		window_size_in_seconds = int(sys.argv[1])
-		frames_per_second = 54 # this can be moved to a variable later
+		frames_per_second = int(sys.argv[2])
+
+		print('Calculating features for a window size of ' + str(window_size_in_seconds))
 
 		# timestamp for a unique filename
 		timestamp = int(time.time())
 		
 		# make a new unique directory for CSVs to live in
-		directory = "window_size_in_seconds_" + str(window_size_in_seconds) + "_" + str(timestamp)
+		directory = "window_size_in_seconds_" + str(window_size_in_seconds)#  + "_" + str(timestamp)
 		
 		if not os.path.exists(directory):
 		    os.makedirs(directory)
 
-		for path in sys.argv[2:]:
+		for path in sys.argv[3:]:
+			print('Calculating features for ' + path + '...')
 
 			# load data
 			data = np.loadtxt(path,skiprows=1,delimiter=',', dtype='float')

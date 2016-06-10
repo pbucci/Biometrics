@@ -1,30 +1,30 @@
-#!/usr/bin/python
+#!//anaconda/bin/python
 
 ################################################################################
 ##<---------------------------- 80 chars across ----------------------------->##
 ##        1         2         3         4         5         6         7       ##  
 ##2345678901234567890123456789012345678901234567890123456789012345678901234567##
 ################################################################################
+# Should only need to be run once...
 
 import sys
 import time
 import os
-# skiplines = 8 # indexes at 1
-print('Argument List:', str(sys.argv))
-# length = 0
-# count = 0
 
 if len(sys.argv) < 2:
 	print("not enough arguments")
+	print("Useage:")
+	print("\tpython clean.py <file1...n>")
 else:
+	print('Cleaning started...')
 	timestamp = int(time.time())
-	directory = "clean" + "_" + str(timestamp)
+	directory = "clean" # + "_" + str(timestamp)
 	
 	if not os.path.exists(directory):
 	    os.makedirs(directory)
 
 	for path in sys.argv[1:]:
-
+		print("Cleaning " + path + '...')
 		filename = path.split('/')[-1]
 		ext = filename.split('.')[-1]
 		fn = filename.split('.')[0]
