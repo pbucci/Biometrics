@@ -1,6 +1,6 @@
 # Usage
 
-Package assumes Anaconda stack has been installed. Usually, this is a large but easy install in a *nix environment. Anaconda is just a manager for a lot of fun python packages like NumPy and SciPy. I've installed a distribution on the SPIN server, and I *think* everyone can use it if they modify their path variable correctly...but I don't know. Come talk to Paul to confirm.
+Package assumes Anaconda stack has been installed. Usually, this is a large but easy install in a Unix environment. Anaconda is just a manager for a lot of fun python packages like NumPy and SciPy. I've installed a distribution on the SPIN server, and I *think* everyone can use it if they modify their path variable correctly...but I don't know. Come talk to Paul to confirm.
 
 Right now, you can just run:
 
