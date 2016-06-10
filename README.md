@@ -15,3 +15,17 @@ Suggest if you're running on newcastle and not sure how long this will take, use
 `nohup run <hz> <seconds>`
 
 To avoid terminating if your connection gets broken. It's not super great for monitoring Console messages, but I'm sure there's a way around that.
+
+## No clean run
+
+Cleaning files takes a very long time and only really needs to be done once. Here's a quick command for passing the files you've already cleaned to the rest of the programs:
+
+`./nocleanrun 54 6000 csv_for_54_2/clean`
+
+and with nohup:
+
+`nohup ./nocleanrun 54 6000 csv_for_54_2/clean`
+
+and with nohup + console monitoring:
+
+`nohup ./nocleanrun 54 6000 csv_for_54_2/clean & tail -f nohup.out`
