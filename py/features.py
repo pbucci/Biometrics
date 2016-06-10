@@ -19,7 +19,7 @@ import numpy as np
 # data  is the full dataset
 def getRows(ws,fps,cols,data):
 	nrows = data.shape[0] # number of rows
-	window_size_in_frames = ws * fps
+	window_size_in_frames = ws * (float(fps) / 1000.0)
 	num_windows = math.floor(nrows / window_size_in_frames)
 	
 	# split array into chunks of window_size_in_frames rows deep
@@ -68,19 +68,19 @@ def main():
 	# Deal with arguments
 	if len(sys.argv) < 4:
 		print('Usage:', str(sys.argv))
-		print('\t','python features.py <window_size_in_seconds> <frames_per_second> <file1...n>')
+		print('\t','python features.py <window_size_in_ms> <frames_per_second> <file1...n>')
 	else:
 
-		window_size_in_seconds = int(sys.argv[1])
+		window_size_in_ms = int(sys.argv[1])
 		frames_per_second = int(sys.argv[2])
 
-		print('Calculating features for a window size of ' + str(window_size_in_seconds))
+		print('Calculating features for a window size of ' + str(window_size_in_ms) + "ms")
 
 		# timestamp for a unique filename
 		timestamp = int(time.time())
 		
 		# make a new unique directory for CSVs to live in
-		directory = "window_size_in_seconds_" + str(window_size_in_seconds)#  + "_" + str(timestamp)
+		directory = "window_size_in_ms_" + str(window_size_in_ms)#  + "_" + str(timestamp)
 		
 		if not os.path.exists(directory):
 		    os.makedirs(directory)
@@ -100,7 +100,7 @@ def main():
 			
 			# generate rows of CSV
 			# each row is a stringified set of features
-			rows = getRows(window_size_in_seconds,frames_per_second,columns,data)
+			rows = getRows(window_size_in_ms,frames_per_second,columns,data)
 
 			# construct the new CSV header and write it out to file
 			header = ''

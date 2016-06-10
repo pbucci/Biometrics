@@ -6,13 +6,12 @@ if [ $1 ]; then
 
 	HZ=$1
 	MS=$2
+	CLEAN=../$3
 
 	mkdir csv_for_${HZ}_${MS}
 	cd csv_for_${HZ}_${MS}
 
-	python ../py/clean.py ../data/orig/*
-	echo 'Cleaning done'
-	python ../py/reduce.py $HZ clean/*
+	python ../py/reduce.py $HZ ${CLEAN}/*
 	echo 'Reducing done'
 	python ../py/features.py $MS $HZ reduce_by_$HZ/*
 	echo 'Feature calculation done'
