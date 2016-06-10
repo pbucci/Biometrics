@@ -26,6 +26,7 @@ else:
 
 	for path in sys.argv[1:]:
 		print("Cleaning " + path + '...')
+		sys.stdout.flush()
 		filename = path.split('/')[-1]
 		ext = filename.split('.')[-1]
 		fn = filename.split('.')[0]
