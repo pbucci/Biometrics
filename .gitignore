@@ -6,3 +6,4 @@ window_size*/
 reduce_by*/
 csv_for*/
 *.csv
+nohup.out
