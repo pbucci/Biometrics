@@ -1,0 +1,25 @@
+## Runs all commands here as a package
+#!/bin/bash
+
+if [ $1 ]; then
+	if [ $2 ]; then
+
+	HZ=$1
+	MS=$2
+	DATA=../$3
+
+	mkdir csv_for_${HZ}_${MS}
+	cd csv_for_${HZ}_${MS}
+
+	python ../py/features.py $MS $HZ ${DATA}/*
+	echo 'Feature calculation done'
+	python ../py/concat.py window_size_in_ms_$MS/*
+	echo 'Concatenation done!'
+	
+	else
+		echo 'Usage: ./run hz sec'
+	fi	
+
+else
+	echo 'Usage: ./run hz sec'
+fi
