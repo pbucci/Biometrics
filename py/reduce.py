@@ -29,6 +29,7 @@ else:
 	    os.makedirs(directory)
 	for path in sys.argv[2:]:
 		print('Reducing ' + path + '...')
+		sys.stdout.flush()
 		with open(path) as file:
 			f = file.readlines()[skipheader:]
 			out = open(directory + '/' + path.split('/')[-1], 'w+')
