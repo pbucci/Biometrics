@@ -9,8 +9,8 @@ if [ $1 ] && [ $2 ] && [ $3 ] && [ $4 ] && [ $5 ]; then
   OFFSET=$4
 	DATA=../$5
 
-	mkdir csv_for_${HZ}_${MS}
-	cd csv_for_${HZ}_${MS}
+	mkdir csv_for_${HZ}_${MS}_${SKIP}_${OFFSET}
+	cd csv_for_${HZ}_${MS}_${SKIP}_${OFFSET}
 
 	python ../py/clean.py ${DATA}*
 	echo 'Cleaning done'
