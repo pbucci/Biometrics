@@ -1,12 +1,13 @@
 ## Runs all commands here as a package
 #!/bin/bash
 
-if [ $1 ]; then
-	if [ $2 ]; then
+if [ $1 ] && [ $2 ] && [ $3 ] && [ $4 ] && [ $5 ]; then
 
 	HZ=$1
 	MS=$2
-	DATA=../$3
+  SKIP=$3
+  OFFSET=$4
+	DATA=../$5
 
 	mkdir csv_for_${HZ}_${MS}
 	cd csv_for_${HZ}_${MS}
@@ -15,15 +16,11 @@ if [ $1 ]; then
 	echo 'Cleaning done'
 	python ../py/reduce.py $HZ clean/*
 	echo 'Reducing done'
-	python ../py/features.py $MS $HZ reduce_by_$HZ/*
+	python ../py/features.py $MS $HZ $SKIP $OFFSET reduce_by_$HZ/*
 	echo 'Feature calculation done'
 	python ../py/concat.py window_size_in_ms_$MS/*
 	echo 'Concatenation done!'
 	
-	else
-		echo 'Usage: ./run hz sec'
-	fi	
-
 else
-	echo 'Usage: ./run hz sec'
+	echo 'Usage: ./run hz ms skip offset path_to_data'
 fi

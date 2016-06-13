@@ -17,17 +17,22 @@ import numpy as np
 # fps   is frames per second
 # cols  is list of column names
 # data  is the full dataset
-def getRows(ws,fps,cols,data):
-	nrows = data.shape[0] # number of rows
-	window_size_in_frames = ws * (float(fps) / 1000.0)
-	num_windows = math.floor(nrows / window_size_in_frames)
+def getRows(ws,fps,skp,offset,cols,data):
+	fpms = float(fps) / 1000.0
+	offset_in_frames = int( float(offset) * fpms )
+	nrows = data.shape[0] -  (2 * offset_in_frames) # total number of rows - offset from front and back
+	window_size_in_frames = int( ws * fpms )
+	window_size_plus_skip_in_frames = int( (ws + skp) * fpms )
+	ws_diff = window_size_plus_skip_in_frames - window_size_in_frames
+	num_windows = math.floor(nrows / (window_size_plus_skip_in_frames))
 	
 	# split array into chunks of window_size_in_frames rows deep
 	# remainder frames are just dropped
 	rows = []
-	for i in range(0,num_windows): 
-		m = i * window_size_in_frames
-		n = (i+1) * window_size_in_frames
+	for i in range(offset_in_frames,num_windows): 
+		
+		m = i * window_size_plus_skip_in_frames
+		n = ( (i+1) * window_size_plus_skip_in_frames ) - ws_diff
 
 		line = []
 		for j in range(0,len(cols)):
@@ -66,13 +71,15 @@ def featureVector(data,columnname):
 
 def main():
 	# Deal with arguments
-	if len(sys.argv) < 4:
+	if len(sys.argv) < 6:
 		print('Usage:', str(sys.argv))
-		print('\t','python features.py <window_size_in_ms> <frames_per_second> <file1...n>')
+		print('\t','python features.py <window_size_in_ms> <frames_per_second> <skip_length_ms> <offset_ms> <file1...n>')
 	else:
 
 		window_size_in_ms = int(sys.argv[1])
 		frames_per_second = int(sys.argv[2])
+		skip_length_ms    = int(sys.argv[3])
+		offset_ms         = int(sys.argv[4])
 
 		print('Calculating features for a window size of ' + str(window_size_in_ms) + "ms")
 
@@ -85,7 +92,7 @@ def main():
 		if not os.path.exists(directory):
 		    os.makedirs(directory)
 
-		for path in sys.argv[3:]:
+		for path in sys.argv[5:]:
 			print('Calculating features for ' + path + '...')
 			sys.stdout.flush()
 			
@@ -100,7 +107,7 @@ def main():
 			
 			# generate rows of CSV
 			# each row is a stringified set of features
-			rows = getRows(window_size_in_ms,frames_per_second,columns,data)
+			rows = getRows(window_size_in_ms,frames_per_second,skip_length_ms,offset_ms,columns,data)
 
 			# construct the new CSV header and write it out to file
 			header = ''
