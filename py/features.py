@@ -48,7 +48,7 @@ def getRows(ws,fps,skp,offset,cols,data):
 		n = ( (i+1) * window_size_plus_skip_in_frames ) - ws_diff
 
 		line = []
-		row_timestamp = data[m,0]
+		row_timestamp = math.floor(data[m,0] * 1000.0)
 		
 		for j in range(0,len(cols)):
 			ret = featureVector(data_offset_removed[m:n,j],cols[j])
@@ -125,7 +125,7 @@ def main():
 			rows = getRows(window_size_in_ms,frames_per_second,skip_length_ms,offset_ms,columns,data)
 
 			# construct the new CSV header and write it out to file
-			header = ''
+			header = 'time,'
 			for column in columns:
 				header = header + column + '_mean' + ',' + column + '_median' + ',' + column + '_variance' + ','
 			header = header + "participant_number" + ',' + 'condition_number' + ',' + 'emotion_label'
