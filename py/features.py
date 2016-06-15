@@ -48,10 +48,12 @@ def getRows(ws,fps,skp,offset,cols,data):
 		n = ( (i+1) * window_size_plus_skip_in_frames ) - ws_diff
 
 		line = []
+		row_timestamp = data[m,0]
+		
 		for j in range(0,len(cols)):
 			ret = featureVector(data_offset_removed[m:n,j],cols[j])
 			line = line + ret
-		rows.append(','.join(line))
+		rows.append(str(row_timestamp) + ',' + ','.join(line))
 	return rows
 
 # Reads the first line of the CSV for column headers
