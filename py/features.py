@@ -125,7 +125,7 @@ def main():
 			rows = getRows(window_size_in_ms,frames_per_second,skip_length_ms,offset_ms,columns,data)
 
 			# construct the new CSV header and write it out to file
-			header = 'time,'
+			header = 'timestamp,'
 			for column in columns:
 				header = header + column + '_mean' + ',' + column + '_median' + ',' + column + '_variance' + ','
 			header = header + "participant_number" + ',' + 'condition_number' + ',' + 'emotion_label'
