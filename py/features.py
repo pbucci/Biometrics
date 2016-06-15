@@ -8,15 +8,27 @@
 
 import sys 
 import os
+#!//anaconda/bin/python
+
+################################################################################
+##<---------------------------- 80 chars across ----------------------------->##
+##        1         2         3         4         5         6         7       ##  
+##2345678901234567890123456789012345678901234567890123456789012345678901234567##
+################################################################################
+
+import sys 
+import os
 import time
 import math
 import re
 import numpy as np
 
-# ws    is window size in seconds
-# fps   is frames per second
-# cols  is list of column names
-# data  is the full dataset
+# ws    	is window size in ms
+# fps   	is frames per second
+# skp 		is gap in ms
+# offset	is portion to cut off front and back in ms
+# cols  	is list of column names
+# data  	is the full dataset
 def getRows(ws,fps,skp,offset,cols,data):
 	fpms = float(fps) / 1000.0
 	offset_in_frames = int( float(offset) * fpms )
@@ -25,18 +37,19 @@ def getRows(ws,fps,skp,offset,cols,data):
 	window_size_plus_skip_in_frames = int( (ws + skp) * fpms )
 	ws_diff = window_size_plus_skip_in_frames - window_size_in_frames
 	num_windows = math.floor(nrows / (window_size_plus_skip_in_frames))
+	data_offset_removed = data[offset_in_frames:(nrows - offset_in_frames),:]
 	
 	# split array into chunks of window_size_in_frames rows deep
 	# remainder frames are just dropped
 	rows = []
-	for i in range(offset_in_frames,num_windows): 
+	for i in range(0,num_windows): 
 		
 		m = i * window_size_plus_skip_in_frames
 		n = ( (i+1) * window_size_plus_skip_in_frames ) - ws_diff
 
 		line = []
 		for j in range(0,len(cols)):
-			ret = featureVector(data[m:n,j],cols[j])
+			ret = featureVector(data_offset_removed[m:n,j],cols[j])
 			line = line + ret
 		rows.append(','.join(line))
 	return rows
