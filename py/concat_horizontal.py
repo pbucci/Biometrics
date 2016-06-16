@@ -21,7 +21,6 @@ from operator import itemgetter, attrgetter, methodcaller
 #
 # Returns an ordered list of sorted elements by fn.
 def order(arr,fn):
-	# fn = kwargs['fn']
 	decorated = [(x,fn(x)) for x in arr]
 	sortd = sorted(decorated,key=itemgetter(1))
 	undecorated = [x for (x,y) in sortd]
@@ -42,6 +41,7 @@ def main():
 		print('\t\t','python concat_horizontal.py <file1...n>\n')
 
 	else:
+		# open all files
 		filenames = [f for f in sys.argv[1:]]
 		openfiles = [open(f) for f in filenames]
 		files = [x.readlines() for x in openfiles]
@@ -53,22 +53,29 @@ def main():
 		# make a new unique directory for CSVs to live in
 		directory = "horizontally_concatenated" + "/"
 		
+		# make director
 		if not os.path.exists(directory):
 		    os.makedirs(directory)
 
+		# sort all files by length
 		sorted_by_length = order(files,len)
 
+		# choose the smallest to be the first set of columns and strip newlines
 		out = [x.strip() for x in sorted_by_length[0]]
 		
+		# add all rows with commas seperating
 		for f in sorted_by_length[1:]:
 			for i in range(0,len(sorted_by_length[0])):
 				out[i] = out[i] + "," + f[i]
 
-		outfile = open(directory + "concat_h_" + str(timestamp),'w+')
+		# unique file for csv
+		outfile = open(directory + "concat_h_" + str(timestamp) + "." + "csv",'w+')
 
+		# write out all lines
 		for line in out:
 			outfile.write(line.strip() + '\n')
 
+		# close just in case
 		outfile.close()
 
 
