@@ -22,6 +22,7 @@ import time
 import math
 import re
 import numpy as np
+from collections import OrderedDict
 
 # ws    	is window size in ms
 # fps   	is frames per second
@@ -29,7 +30,7 @@ import numpy as np
 # offset	is portion to cut off front and back in ms
 # cols  	is list of column names
 # data  	is the full dataset
-def getRows(ws,fps,skp,offset,cols,data):
+def getRows(ws,fps,skp,offset,cols,data,features):
 	fpms = float(fps) / 1000.0
 	offset_in_frames = int( float(offset) * fpms )
 	nrows = data.shape[0] -  (2 * offset_in_frames) # total number of rows - offset from front and back
@@ -51,7 +52,7 @@ def getRows(ws,fps,skp,offset,cols,data):
 		row_timestamp = math.floor(data[m,0] * 1000.0)
 		
 		for j in range(0,len(cols)):
-			ret = featureVector(data_offset_removed[m:n,j],cols[j])
+			ret = featureVector(data_offset_removed[m:n,j],cols[j],features)
 			line = line + ret
 		rows.append(str(row_timestamp) + ',' + ','.join(line))
 	return rows
@@ -71,18 +72,19 @@ def getMeta(path):
 		pn_cn_el.append("None")
 	return pn_cn_el
 
-
 # all features 
-# TODO make a dictionary for features + functions so this 
-# can be automatically built
-def featureVector(data,columnname):
-	arr = [
-		np.mean(data),    # mean
-		np.median(data),  # median
-		np.var(data)      # variance
-	]
+# features is an ordered dictionary of feature names -> functions
+#		ex:
+#			fd = {'mean' : np.mean, 'median':np.median}
+def featureVector(data,columnname,features):
+	arr = [v(data) for k,v in features.items()]
+	# cut off float at 6 places for Weka
+	filt = [format(x, ".6f") for x in arr]
+	return [str(x) for x in filt] # turn this into string for writing out
 
-	return [str(x) for x in arr] # turn this into string for writing out
+# Do things like detrending...stub for now
+def preprocess(data):
+	return data # stub
 
 def main():
 	# Deal with arguments
@@ -102,7 +104,7 @@ def main():
 		timestamp = int(time.time())
 		
 		# make a new unique directory for CSVs to live in
-		directory = "window_size_in_ms_" + str(window_size_in_ms)#  + "_" + str(timestamp)
+		directory = "window_size_in_ms_" + str(window_size_in_ms) #  + "_" + str(timestamp)
 		
 		if not os.path.exists(directory):
 		    os.makedirs(directory)
@@ -112,7 +114,10 @@ def main():
 			sys.stdout.flush()
 			
 			# load data
-			data = np.loadtxt(path,skiprows=1,delimiter=',', dtype='float')
+			raw_data = np.loadtxt(path,skiprows=1,delimiter=',', dtype='float')
+
+			# preprocess data (things like detrending, etc)
+			data = preprocess(raw_data)
 
 			# retrieve columns of CSV from first row
 			columns = getColumns(path)
@@ -120,14 +125,26 @@ def main():
 			# get particpant, condition, and emotion labels
 			pn_cn_el = getMeta(path)
 			
+			# specify features
+			featureDict = {
+				'mean':np.mean,
+				'median':np.median,
+				'variance':np.var,
+				'max':np.max,
+				'min':np.min,
+			}
+
+			# sort features so you never have to worry about order
+			features = OrderedDict(sorted(featureDict.items(), key=lambda t:t[0]))
+
 			# generate rows of CSV
 			# each row is a stringified set of features
-			rows = getRows(window_size_in_ms,frames_per_second,skip_length_ms,offset_ms,columns,data)
+			rows = getRows(window_size_in_ms,frames_per_second,skip_length_ms,offset_ms,columns,data,features)
 
 			# construct the new CSV header and write it out to file
 			header = 'timestamp,'
 			for column in columns:
-				header = header + column + '_mean' + ',' + column + '_median' + ',' + column + '_variance' + ','
+				header = header + ','.join([column + '_' + k for k in features.keys()]) + ','
 			header = header + "participant_number" + ',' + 'condition_number' + ',' + 'emotion_label'
 
 			# make a new file to write to
