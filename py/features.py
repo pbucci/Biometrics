@@ -89,9 +89,11 @@ def featureVector(data,columnname,features):
 def preprocess(data,columns):
 
 	# comment this out to remove detrending
-	nrows = data.shape[0]
-	for i in range(0,nrows):
-		data[:,i] = signal.detrend(data[:,i])
+	
+	# nrows = data.shape[0]
+	# for i in range(0,nrows):
+	# 	data[:,i] = signal.detrend(data[:,i])
+	
 	# / comment
 
 	return data # stub
